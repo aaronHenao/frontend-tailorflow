@@ -1,41 +1,31 @@
 .edit-customer-container {
-    display: flex;
-    justify-content: center;
     padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
-mat-card {
+.loading {
+    text-align: center;
+    padding: 40px;
+    color: var(--mat-sys-on-surface-variant);
+}
+
+.form-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin: 24px 0;
+}
+
+.full-width {
     width: 100%;
-    max-width: 600px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
 
-    mat-card-header {
-        padding-bottom: 16px;
-    }
-
-    mat-card-title {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .form-content {
-        padding-top: 20px;
-    }
-
-    form {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .full-width {
-        width: 100%;
-    }
-
-    .actions {
-        display: flex;
-        justify-content: flex-end;
-        gap: 10px;
-        padding-top: 20px;
-    }
+.actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--mat-sys-outline-variant);
 }

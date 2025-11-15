@@ -89,7 +89,7 @@ export class AuthService {
 
     if (!user) {
       return '';
-    }
+    } 
 
     return user.id_rol === 1 ? '/admin' : '/employee';
   }

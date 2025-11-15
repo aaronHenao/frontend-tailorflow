@@ -1,68 +1,21 @@
-.categories-list-container {
-    padding: 20px;
-    display: flex;
-    justify-content: center;
+.categories-container {
+  padding: 20px;
 }
 
-mat-card {
-    width: 100%;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+mat-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
-mat-card-title {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 1.5em;
+.categories-table {
+  width: 100%;
+  margin-top: 20px;
 }
 
-.header-actions {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 16px;
-}
-
-.table-container {
-    position: relative; 
-    overflow-x: auto; 
-    width: 100%;
-    min-height: 200px;
-}
-
-table {
-    width: 100%;
-}
-
-
-.mat-column-actions {
-    width: 120px;
-    text-align: center;
-    padding-right: 16px;
-}
-
-
-.mat-paginator {
-    background: transparent;
-    border-top: 1px solid #e0e0e0;
-}
-
-
-
-.is-loading {
-    pointer-events: none;
-    opacity: 0.8; 
-}
-
-.loading-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: rgba(255, 255, 255, 0.7); 
-    z-index: 10;
+.loading, .no-data {
+  text-align: center;
+  padding: 20px;
+  color: var(--mat-sys-on-surface-variant);
 }

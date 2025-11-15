@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -15,13 +14,12 @@ import { Role } from '../../../../core/models/role.model';
   selector: 'app-create-employee',
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
     MatButtonModule,
-    MatCardModule
+    MatCardModule,
   ],
   templateUrl: './create-employee.html',
   styleUrl: './create-employee.scss'
@@ -50,7 +48,7 @@ export class CreateEmployee implements OnInit {
   }
 
   loadRoles(): void {
-    this.rolesService.getAllForForms().subscribe({
+    this.rolesService.getAll().subscribe({
       next: (response) => {
         this.roles = response.data;
       },
@@ -67,7 +65,7 @@ export class CreateEmployee implements OnInit {
     this.isSaving = true;
     this.employeesService.create(this.employeeForm.value).subscribe({
       next: (response) => {
-        alert('Empleado creado exitosamente');
+        alert(`Empleado ${response.data.name} creado exitosamente`);
         this.router.navigate(['/admin/employees']);
       },
       error: (err) => {

@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -16,7 +15,6 @@ import { Role } from '../../../../core/models/role.model';
   selector: 'app-edit-flow',
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
@@ -55,7 +53,7 @@ export class EditFlow implements OnInit {
   }
 
   loadRoles(): void {
-    this.rolesService.getAllForForms().subscribe({
+    this.rolesService.getAll().subscribe({
       next: (response) => {
         this.roles = response.data;
       },

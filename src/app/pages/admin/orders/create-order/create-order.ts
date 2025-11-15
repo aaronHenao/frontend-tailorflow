@@ -15,10 +15,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { OrdersService } from '../../../../services/orders.service';
 import { CustomersService } from '../../../../services/customers.service';
 import { CategoriesService } from '../../../../services/categories.service';
-import { MaterialsService } from '../../../../services/materials.service';
 import { Customer } from '../../../../core/models/customer.model';
 import { Category } from '../../../../core/models/category.model';
-import { Material } from '../../../../core/models/material.model';
 import { CreateProductPayload } from '../../../../core/models api/api.model';
 import { ResponseDto } from '../../../../core/models/response.dto';
 import { forkJoin, Observable, throwError } from 'rxjs';
@@ -53,7 +51,6 @@ export class CreateOrder implements OnInit {
 
   customers: Customer[] = [];
   categories: Category[] = [];
-  materials: Material[] = [];
   customerSearchControl = new FormControl('');
   filteredCustomers!: Observable<Customer[]>;
 
@@ -64,30 +61,23 @@ export class CreateOrder implements OnInit {
     private router: Router,
     private ordersService: OrdersService,
     private customersService: CustomersService,
-    private categoriesService: CategoriesService,
-    private materialsService: MaterialsService
+    private categoriesService: CategoriesService
   ) {
-    this.initForms();
-  }
-
-  ngOnInit(): void {
-    this.loadCustomers();
-    this.loadCategories();
-    this.loadMaterials();
-    this.setupCustomerFilter();
-  }
-
-  initForms(): void {
 
     this.orderForm = this.fb.group({
       id_customer: [null, Validators.required],
       estimated_delivery_date: [null, [Validators.required, this.futureDateValidator]]
     });
 
-
     this.productsForm = this.fb.group({
       products: this.fb.array([])
     });
+  }
+
+  ngOnInit(): void {
+    this.loadCustomers();
+    this.loadCategories();
+    this.setupCustomerFilter();
   }
 
   futureDateValidator(control: AbstractControl) {
@@ -105,10 +95,6 @@ export class CreateOrder implements OnInit {
     return this.productsForm.get('products') as FormArray;
   }
 
-  getMaterials(productIndex: number): FormArray {
-    return this.products.at(productIndex).get('materials') as FormArray;
-  }
-
   addProduct(): void {
     const productGroup = this.fb.group({
       name: ['', Validators.required],
@@ -117,7 +103,6 @@ export class CreateOrder implements OnInit {
       fabric: ['', Validators.required],
       dimensions: [''],
       description: [''],
-      materials: this.fb.array([])
     });
 
     this.products.push(productGroup);
@@ -127,54 +112,7 @@ export class CreateOrder implements OnInit {
     this.products.removeAt(index);
   }
 
-  addMaterial(productIndex: number): void {
-    const materialGroup = this.fb.group({
-      id_material: [null, Validators.required],
-      quantity: [1, [Validators.required, Validators.min(1)]]
-    });
-
-    materialGroup.valueChanges.subscribe(value => {
-      if (typeof value.id_material === 'number' && value.id_material !== null && value.quantity) {
-        this.checkSingleMaterialStock(materialGroup.get('quantity')!, value.id_material, value.quantity);
-      } else if (materialGroup.get('quantity')!.hasError('stockInsuficiente')) {
-        materialGroup.get('quantity')!.updateValueAndValidity();
-      }
-    });
-
-    materialGroup.get('id_material')!.valueChanges.subscribe((id_material: number | null) => {
-      const quantityControl = materialGroup.get('quantity')!;
-      const quantity = quantityControl.value;
-
-      if (id_material !== null && typeof id_material === 'number' && quantity !== null) {
-        this.checkSingleMaterialStock(quantityControl, id_material, quantity);
-      } else if (quantityControl.hasError('stockInsuficiente')) {
-        quantityControl.updateValueAndValidity();
-      }
-    });
-
-    this.getMaterials(productIndex).push(materialGroup);
-  }
-
-  checkSingleMaterialStock(quantityControl: AbstractControl, id_material: number, quantity: number): void {
-    const material = this.materials.find(m => m.id_material === id_material);
-
-    if (material && material.current_stock < quantity) {
-
-      quantityControl.setErrors({
-        stockInsuficiente: {
-          available: material.current_stock
-        }
-      });
-    } else if (quantityControl.hasError('stockInsuficiente')) {
-      quantityControl.updateValueAndValidity();
-    }
-  }
-
-  removeMaterial(productIndex: number, materialIndex: number): void {
-    this.getMaterials(productIndex).removeAt(materialIndex);
-  }
-
-
+  
   loadCustomers(): void {
     this.customersService.getAllForForms().subscribe({
       next: (response) => {
@@ -185,18 +123,12 @@ export class CreateOrder implements OnInit {
   }
 
   loadCategories(): void {
-    this.categoriesService.getAllForForms().subscribe({
+    this.categoriesService.getAll().subscribe({
       next: (response: ResponseDto<Category[]>) => this.categories = response.data,
       error: (err) => console.error('Error cargando categorías', err)
     });
   }
 
-  loadMaterials(): void {
-    this.materialsService.getAll().subscribe({
-      next: (response: ResponseDto<Material[]>) => this.materials = response.data,
-      error: (err) => console.error('Error cargando materiales', err)
-    });
-  }
 
   getProductGroup(index: number): FormGroup {
     return this.products.at(index) as FormGroup;
@@ -247,7 +179,6 @@ export class CreateOrder implements OnInit {
         fabric: product.fabric,
         dimensions: product.dimensions || undefined,
         description: product.description || undefined,
-        materials: product.materials,
       };
 
       const productCreation$ = this.ordersService.createProduct(productPayload).pipe(
@@ -306,6 +237,7 @@ export class CreateOrder implements OnInit {
       id_customer: event.option.value.id_customer
     });
   }
+
   displayCustomerName = (customer: Customer): string => {
     return customer ? customer.name : '';
   };

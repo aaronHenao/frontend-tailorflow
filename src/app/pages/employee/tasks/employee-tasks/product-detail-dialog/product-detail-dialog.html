@@ -1,4 +1,3 @@
-<!-- product-detail-dialog.component.html -->
 <div class="dialog-container">
   <div class="dialog-header">
     <h2 mat-dialog-title>
@@ -14,7 +13,6 @@
 
   <mat-dialog-content>
     <div class="product-details">
-      <!-- Nombre -->
       <div class="detail-item">
         <div class="detail-label">
           <mat-icon>label</mat-icon>
@@ -24,35 +22,38 @@
       </div>
 
 
-      <!-- Descripción -->
-      <div class="detail-item" *ngIf="product.description">
+      @if(product.description){
+      <div class="detail-item">
         <div class="detail-label">
           <mat-icon>description</mat-icon>
           <span>Descripción</span>
         </div>
         <div class="detail-value">{{ product.description }}</div>
       </div>
+      }
 
-      <!-- Dimensiones -->
-      <div class="detail-item" *ngIf="product.dimensions">
+      @if(product.dimensions){
+      <div class="detail-item">
         <div class="detail-label">
           <mat-icon>straighten</mat-icon>
           <span>Dimensiones</span>
         </div>
         <div class="detail-value">{{ product.dimensions }}</div>
       </div>
+      }
 
-      <!-- Tela -->
-      <div class="detail-item" *ngIf="product.fabric">
+      @if(product.fabric){
+      <div class="detail-item">
         <div class="detail-label">
           <mat-icon>texture</mat-icon>
           <span>Tela</span>
         </div>
         <div class="detail-value">{{ product.fabric }}</div>
       </div>
+      }
 
-      <!-- Foto de referencia -->
-      <div class="detail-item" *ngIf="product.ref_photo">
+      @if(product.ref_photo){
+        <div class="detail-item">
         <div class="detail-label">
           <mat-icon>image</mat-icon>
           <span>Foto de Referencia</span>
@@ -61,6 +62,7 @@
           <img [src]="product.ref_photo" [alt]="product.name" class="product-image">
         </div>
       </div>
+      }
 
     </div>
   </mat-dialog-content>

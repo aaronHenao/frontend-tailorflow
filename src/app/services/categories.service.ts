@@ -6,13 +6,6 @@ import { ResponseDto } from '../core/models/response.dto';
 import { Category } from '../core/models/category.model'; 
 
 
-interface CategoriesPaginatedResponse {
-    categories: Category[];
-    total: number;
-    page: number;
-    totalPages: number;
-}
-
 @Injectable({
   providedIn: 'root'
 })
@@ -21,12 +14,7 @@ export class CategoriesService {
 
   constructor(private http: HttpClient) {}
 
-  getAllPaginated(page: number, limit: number): Observable<ResponseDto<CategoriesPaginatedResponse>> {
-    return this.http.get<ResponseDto<CategoriesPaginatedResponse>>(`${this.API_URL}?page=${page}&limit=${limit}`);
-  }
-  
-
-  getAllForForms(): Observable<ResponseDto<Category[]>> {
+  getAll(): Observable<ResponseDto<Category[]>> {
     return this.http.get<ResponseDto<Category[]>>(`${this.API_URL}/all`);
   }
 

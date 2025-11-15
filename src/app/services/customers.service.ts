@@ -13,13 +13,8 @@ export class CustomersService {
 
   constructor(private http: HttpClient) { }
 
-  getAll(page: number = 1, limit: number = 10): Observable<ResponseDto<{
-    customers: Customer[];
-    total: number;
-    page: number;
-    totalPages: number;
-  }>> {
-    return this.http.get<ResponseDto<any>>(`${this.API_URL}?page=${page}&limit=${limit}`);
+  getAll(): Observable<ResponseDto<Customer[]>>{
+    return this.http.get<ResponseDto<Customer[]>>(`${this.API_URL}/all`);
   }
 
   getById(id: number): Observable<ResponseDto<Customer>> {

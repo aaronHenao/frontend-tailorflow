@@ -3,50 +3,52 @@
     <mat-card-header>
       <mat-card-title>Crear Empleado</mat-card-title>
     </mat-card-header>
-
+    
     <mat-card-content>
       <form [formGroup]="employeeForm">
         <div class="form-section">
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Cédula</mat-label>
             <input matInput formControlName="cc" placeholder="Ej: 1001132363" maxlength="10">
-            <mat-error *ngIf="employeeForm.get('cc')?.hasError('required')">
-              La cédula es requerida
-            </mat-error>
-            <mat-error *ngIf="employeeForm.get('cc')?.hasError('pattern')">
-              Debe ser un número de 7 a 10 dígitos
-            </mat-error>
+            @if(employeeForm.get('cc')?.hasError('required')){
+            <mat-error>La cédula es requerida</mat-error>
+            }
+            @if(employeeForm.get('cc')?.hasError('pattern')){
+            <mat-error>Debe ser un número de 7 a 10 dígitos</mat-error>
+            }
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Nombre Completo</mat-label>
             <input matInput formControlName="name" placeholder="Ej: Juan Pérez">
-            <mat-error *ngIf="employeeForm.get('name')?.hasError('required')">
-              El nombre es requerido
-            </mat-error>
+            @if(employeeForm.get('name')?.hasError('required')){
+            <mat-error>El nombre es requerido</mat-error>
+            }
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Contraseña</mat-label>
             <input matInput type="password" formControlName="password">
-            <mat-error *ngIf="employeeForm.get('password')?.hasError('required')">
-              La contraseña es requerida
-            </mat-error>
-            <mat-error *ngIf="employeeForm.get('password')?.hasError('minlength')">
-              Debe tener al menos 6 caracteres
-            </mat-error>
+            @if(employeeForm.get('password')?.hasError('required')){
+            <mat-error>La contraseña es requerida</mat-error>
+            }
+            @if(employeeForm.get('password')?.hasError('minlength')){
+            <mat-error>Debe tener al menos 6 caracteres</mat-error>
+            }
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Rol</mat-label>
             <mat-select formControlName="id_role">
-              <mat-option *ngFor="let role of roles" [value]="role.id_role">
+              @for(role of roles; track role.id_role){
+              <mat-option [value]="role.id_role">
                 {{ role.name }} - {{ role.area?.name }}
               </mat-option>
+              }
             </mat-select>
-            <mat-error *ngIf="employeeForm.get('id_role')?.hasError('required')">
-              El rol es requerido
-            </mat-error>
+            @if(employeeForm.get('id_role')?.hasError('required')){
+            <mat-error>El rol es requerido</mat-error>
+            }
           </mat-form-field>
         </div>
 
@@ -54,7 +56,8 @@
           <button mat-button type="button" (click)="onCancel()" [disabled]="isSaving">
             Cancelar
           </button>
-          <button mat-raised-button color="primary" type="button" (click)="onSubmit()" [disabled]="!employeeForm.valid || isSaving">
+          <button mat-raised-button color="primary" type="button" (click)="onSubmit()"
+            [disabled]="!employeeForm.valid || isSaving">
             {{ isSaving ? 'Guardando...' : 'Crear Empleado' }}
           </button>
         </div>

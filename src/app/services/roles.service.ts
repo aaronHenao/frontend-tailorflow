@@ -13,16 +13,7 @@ export class RolesService {
 
   constructor(private http: HttpClient) {}
 
-  getAll(page: number = 1, limit: number = 10): Observable<ResponseDto<{
-    roles: Role[];
-    total: number;
-    page: number;
-    totalPages: number;
-  }>> {
-    return this.http.get<ResponseDto<any>>(`${this.API_URL}?page=${page}&limit=${limit}`);
-  }
-
-  getAllForForms(): Observable<ResponseDto<Role[]>> {
+  getAll(): Observable<ResponseDto<Role[]>> {
     return this.http.get<ResponseDto<Role[]>>(`${this.API_URL}/all`);
   }
 

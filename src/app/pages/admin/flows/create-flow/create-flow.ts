@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -17,7 +16,6 @@ import { Role } from '../../../../core/models/role.model';
   selector: 'app-create-flow',
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
@@ -30,9 +28,10 @@ import { Role } from '../../../../core/models/role.model';
 })
 export class CreateFlow implements OnInit {
   flowForm: FormGroup;
+  isLoading = true; 
+  isSaving = false;
   categories: Category[] = [];
   roles: Role[] = [];
-  isSaving = false;
 
   constructor(
     private fb: FormBuilder,
@@ -54,20 +53,27 @@ export class CreateFlow implements OnInit {
   }
 
   loadCategories(): void {
-    this.categoriesService.getAllForForms().subscribe({
+    this.categoriesService.getAll().subscribe({
       next: (response) => {
         this.categories = response.data;
       },
-      error: (err) => console.error('Error cargando categorías', err)
+      error: (err) => {
+        alert('Error al cargar la lista de categorías. No se puede crear el flujo.');
+        this.router.navigate(['/admin/flows']);
+      }
     });
   }
 
   loadRoles(): void {
-    this.rolesService.getAllForForms().subscribe({
+    this.rolesService.getAll().subscribe({
       next: (response) => {
         this.roles = response.data;
+        this.isLoading = false;
       },
-      error: (err) => console.error('Error cargando roles', err)
+      error: (err) => {
+        alert('Error al cargar la lista de roles. No se puede crear el flujo.');
+        this.router.navigate(['/admin/flows']);
+      }
     });
   }
 
@@ -78,6 +84,7 @@ export class CreateFlow implements OnInit {
     }
 
     this.isSaving = true;
+
     this.flowsService.create(this.flowForm.value).subscribe({
       next: (response) => {
         alert('Flujo creado exitosamente');

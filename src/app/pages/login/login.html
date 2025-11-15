@@ -6,14 +6,14 @@
     </mat-card-header>
 
     <mat-card-content>
-        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <form [formGroup]="loginForm">
 
             <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Número de CC o Usuario</mat-label>
+                <mat-label>Número de CC </mat-label>
                 <input matInput type="text" formControlName="cc" required>
                 @if (loginForm.get('cc')?.invalid && loginForm.get('cc')?.touched) {
                 <mat-error>
-                    La cédula/usuario es <strong>obligatorio</strong>.
+                    La cédula es <strong>obligatoria</strong>.
                 </mat-error>
                 }
             </mat-form-field>
@@ -28,10 +28,10 @@
                 }
             </mat-form-field>
 
-            <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid"
+            <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid" (click)="onSubmit()"
                 class="full-width login-button">
                 Entrar
             </button>
         </form>
-    </mat-card-content>
+    </mat-card-content> 
 </mat-card>

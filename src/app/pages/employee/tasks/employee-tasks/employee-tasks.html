@@ -1,4 +1,3 @@
-<!-- employee-tasks.component.html -->
 <div class="tasks-container">
   <div class="header">
     <h1>
@@ -11,8 +10,8 @@
     </button>
   </div>
 
-  <!-- Loading State -->
-  <div *ngIf="isLoading" class="loading-container">
+  @if(isLoading){
+  <div class="loading-container">
     <mat-card>
       <mat-card-content class="loading-content">
         <mat-spinner diameter="60"></mat-spinner>
@@ -20,9 +19,8 @@
       </mat-card-content>
     </mat-card>
   </div>
-
-  <!-- Error State -->
-  <div *ngIf="!isLoading && errorMessage" class="error-container">
+  } @else if (errorMessage) {
+  <div class="error-container">
     <mat-card>
       <mat-card-content class="error-content">
         <mat-icon color="warn">error_outline</mat-icon>
@@ -34,10 +32,10 @@
       </mat-card-content>
     </mat-card>
   </div>
-
-  <!-- Tasks Content -->
-  <div *ngIf="!isLoading && !errorMessage && groupedTasks.length > 0" class="tasks-content">
-    <div *ngFor="let group of groupedTasks" class="product-group">
+  } @else if (groupedTasks.length > 0) {
+  <div class="tasks-content">
+    @for(group of groupedTasks; track group){
+    <div class="product-group">
       <mat-card>
         <mat-card-header>
           <div class="card-header-content">
@@ -50,13 +48,12 @@
                 {{ group.tasks.length }} tarea(s) asignada(s)
               </mat-card-subtitle>
             </div>
-            <button 
-              mat-raised-button 
-              color="primary"
-              [disabled]="loadingProductId === group.productId"
+            <button mat-raised-button color="primary" [disabled]="loadingProductId === group.productId"
               (click)="onViewProductDetail(group.productId)">
-              <mat-spinner *ngIf="loadingProductId === group.productId" diameter="20"></mat-spinner>
-              <mat-icon *ngIf="loadingProductId !== group.productId">visibility</mat-icon>
+              @if(loadingProductId === group.productId){
+              <mat-spinner diameter="20"></mat-spinner>
+              }
+              <mat-icon>visibility</mat-icon>
               {{ loadingProductId === group.productId ? 'Cargando...' : 'Ver Detalle' }}
             </button>
           </div>
@@ -66,22 +63,23 @@
 
         <mat-card-content>
           <div class="tasks-list">
-            <div *ngFor="let task of group.tasks" class="task-item" 
-                 [class.task-pending]="task.id_state === 1"
-                 [class.task-in-process]="task.id_state === 2"
-                 [class.task-finished]="task.id_state === 3">
-              
-              <!-- Task Header -->
+            @for(task of group.tasks; track task){
+            <div class="task-item" [class.task-pending]="task.id_state === 1"
+              [class.task-in-process]="task.id_state === 2" [class.task-finished]="task.id_state === 3">
+
               <div class="task-header">
                 <div class="task-info">
                   <div class="task-sequence">
                     <mat-icon>filter_{{ task.sequence }}</mat-icon>
                     <span>Secuencia {{ task.sequence }}</span>
                   </div>
-                  <div class="task-area" *ngIf="task.area">
+                  @if(task.area){
+                    <div class="task-area">
                     <mat-icon>business</mat-icon>
                     <span>{{ task.area.name }}</span>
                   </div>
+                  }
+                  
                 </div>
                 <mat-chip [color]="getTaskStatusColor(task.id_state)" highlighted>
                   <mat-icon>{{ getTaskStatusIcon(task.id_state) }}</mat-icon>
@@ -89,65 +87,71 @@
                 </mat-chip>
               </div>
 
-              <!-- Task Details -->
               <div class="task-details">
-                <div class="detail-row" *ngIf="task.start_date">
+                @if(task.start_date){
+                <div class="detail-row">
                   <mat-icon>schedule</mat-icon>
                   <span><strong>Iniciada:</strong> {{ formatDate(task.start_date) }}</span>
                 </div>
-                <div class="detail-row" *ngIf="task.end_date">
+                }
+                @if(task.end_date){
+                <div class="detail-row">
                   <mat-icon>done</mat-icon>
                   <span><strong>Finalizada:</strong> {{ formatDate(task.end_date) }}</span>
                 </div>
+                }
               </div>
 
-              <!-- Task Actions -->
               <div class="task-actions">
-                <!-- Start Button -->
-                <button 
-                  mat-raised-button 
-                  color="accent"
-                  *ngIf="task.id_state === 1"
-                  [disabled]="!canStartTask(task) || processingTaskId === task.id_task"
-                  (click)="onStartTask(task)">
-                  <mat-spinner *ngIf="processingTaskId === task.id_task" diameter="20"></mat-spinner>
-                  <mat-icon *ngIf="processingTaskId !== task.id_task">play_arrow</mat-icon>
+                @if(task.id_state === 1){
+                <button mat-raised-button color="accent"
+                  [disabled]="!canStartTask(task) || processingTaskId === task.id_task" (click)="onStartTask(task)">
+                  @if(processingTaskId === task.id_task){
+                  <mat-spinner diameter="20"></mat-spinner>
+                  }
+                  <mat-icon>play_arrow</mat-icon>
                   {{ processingTaskId === task.id_task ? 'Procesando...' : 'Iniciar Tarea' }}
                 </button>
+                }
 
-                <!-- Complete Button -->
-                <button 
-                  mat-raised-button 
-                  color="primary"
-                  *ngIf="task.id_state === 2"
+                @if(task.id_state === 2){
+                <button mat-raised-button color="primary"
                   [disabled]="!canCompleteTask(task) || processingTaskId === task.id_task"
                   (click)="onCompleteTask(task)">
-                  <mat-spinner *ngIf="processingTaskId === task.id_task" diameter="20"></mat-spinner>
-                  <mat-icon *ngIf="processingTaskId !== task.id_task">check_circle</mat-icon>
+                  @if(processingTaskId === task.id_task){
+                  <mat-spinner diameter="20"></mat-spinner>
+                  }
+                  <mat-icon>check_circle</mat-icon>
                   {{ processingTaskId === task.id_task ? 'Procesando...' : 'Completar Tarea' }}
                 </button>
+                }
 
-                <!-- Finished Badge -->
-                <div *ngIf="task.id_state === 3" class="finished-badge">
+                @if(task.id_state === 3){
+                <div class="finished-badge">
                   <mat-icon>check_circle</mat-icon>
                   <span>Tarea Completada</span>
                 </div>
+                }
 
-                <!-- Waiting Message -->
-                <div *ngIf="task.id_state === 1 && !canStartTask(task)" class="waiting-message">
+                @if(task.id_state === 1 && !canStartTask(task)){
+                <div class="waiting-message">
                   <mat-icon>hourglass_empty</mat-icon>
                   <span>Esperando tarea anterior</span>
                 </div>
+                }
               </div>
             </div>
+            }
           </div>
         </mat-card-content>
       </mat-card>
     </div>
+    
+    }
   </div>
 
-  <!-- Empty State -->
-  <div *ngIf="!isLoading && !errorMessage && groupedTasks.length === 0" class="empty-container">
+  } @else {
+    <div class="empty-container">
     <mat-card>
       <mat-card-content class="empty-content">
         <mat-icon>assignment_turned_in</mat-icon>
@@ -156,4 +160,7 @@
       </mat-card-content>
     </mat-card>
   </div>
+  }
+
+
 </div>

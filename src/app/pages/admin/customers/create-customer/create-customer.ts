@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -12,7 +11,6 @@ import { CustomersService } from '../../../../services/customers.service';
   selector: 'app-create-customer',
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
@@ -47,7 +45,7 @@ export class CreateCustomer {
     this.isSaving = true;
     this.customersService.create(this.customerForm.value).subscribe({
       next: (response) => {
-        alert('Cliente creado exitosamente');
+        alert(`Cliente ${response.data.name} creado exitosamente`);
         this.router.navigate(['/admin/customers']);
       },
       error: (err) => {

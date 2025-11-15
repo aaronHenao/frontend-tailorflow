@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -7,7 +6,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { MatDividerModule } from '@angular/material/divider'; 
 import { MatSelectModule } from '@angular/material/select'; 
 import { RolesService } from '../../../../services/roles.service';
 import { AreasService } from '../../../../services/areas.service'; 
@@ -17,14 +15,12 @@ import { Area } from '../../../../core/models/area.model';
   selector: 'app-create-role',
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
     MatCardModule,
     MatIconModule,
-    MatDividerModule,
     MatSelectModule
   ],
   templateUrl: './create-role.html',
@@ -42,32 +38,27 @@ export class CreateRole implements OnInit {
     private rolesService: RolesService,
     private areasService: AreasService 
   ) {
-    this.initForm();
+    this.createForm = this.fb.group({
+      name: ['', [Validators.required, Validators.maxLength(50)]],
+      description: ['', [Validators.required, Validators.maxLength(100)]],
+      id_area: [null, [Validators.required, Validators.min(1)]] 
+    });
   }
 
   ngOnInit(): void {
-    this.loadDependencies(); 
+    this.loadAreas(); 
   }
 
-  loadDependencies(): void {
-    this.areasService.getAllForForms().subscribe({
+  loadAreas(): void {
+    this.areasService.getAll().subscribe({
       next: (response) => {
         this.areas = response.data; 
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error cargando áreas', err);
         alert('Error al cargar la lista de áreas. No se puede crear el rol.');
         this.router.navigate(['/admin/roles']);
       }
-    });
-  }
-
-  initForm(): void {
-    this.createForm = this.fb.group({
-      name: ['', [Validators.required, Validators.maxLength(50)]],
-      description: ['', [Validators.required, Validators.maxLength(100)]],
-      id_area: [null, [Validators.required, Validators.min(1)]] 
     });
   }
 

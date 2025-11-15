@@ -10,20 +10,20 @@
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Nombre Completo</mat-label>
             <input matInput formControlName="name" placeholder="Ej: Juan Pérez">
-            <mat-error *ngIf="customerForm.get('name')?.hasError('required')">
-              El nombre es requerido
-            </mat-error>
+            @if(customerForm.get('name')?.hasError('required')){
+              <mat-error>El nombre es requerido</mat-error>
+            }
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Teléfono</mat-label>
             <input matInput formControlName="phone" placeholder="Ej: 3001234567" maxlength="10">
-            <mat-error *ngIf="customerForm.get('phone')?.hasError('required')">
-              El teléfono es requerido
-            </mat-error>
-            <mat-error *ngIf="customerForm.get('phone')?.hasError('pattern')">
-              Debe ser un número de 10 dígitos
-            </mat-error>
+            @if(customerForm.get('phone')?.hasError('required')){
+              <mat-error>El teléfono es requerido</mat-error>
+            }
+            @if(customerForm.get('phone')?.hasError('pattern')){
+              <mat-error>Debe ser un número de 10 dígitos</mat-error>
+            }
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="full-width">

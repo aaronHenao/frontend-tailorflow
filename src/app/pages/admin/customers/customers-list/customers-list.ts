@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
@@ -13,24 +12,18 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
   selector: 'app-customers-list',
   standalone: true,
   imports: [
-    CommonModule,
     RouterModule,
     MatTableModule,
     MatButtonModule,
     MatIconModule,
     MatCardModule,
-    MatPaginatorModule
   ],
   templateUrl: './customers-list.html',
   styleUrl: './customers-list.scss'
 })
 export class CustomersList implements OnInit {
   customers: Customer[] = [];
-  total = 0;
-  page = 1;
-  pageSize = 10;
-  pageSizeOptions = [5, 10, 25, 50];
-  displayedColumns: string[] = ['id_customer', 'name', 'phone', 'address', 'actions'];
+  displayedColumns: string[] = ['name', 'phone', 'address', 'actions'];
   isLoading = false;
 
   constructor(private customersService: CustomersService, private router: Router) { }
@@ -41,10 +34,9 @@ export class CustomersList implements OnInit {
 
   loadCustomers(): void {
     this.isLoading = true;
-    this.customersService.getAll(this.page, this.pageSize).subscribe({
+    this.customersService.getAll().subscribe({
       next: (response) => {
-        this.customers = response.data.customers;
-        this.total = response.data.total;
+        this.customers = response.data;
         this.isLoading = false;
       },
       error: (err) => {
@@ -54,10 +46,8 @@ export class CustomersList implements OnInit {
     });
   }
 
-  onPageChange(event: PageEvent): void {
-    this.page = event.pageIndex + 1;
-    this.pageSize = event.pageSize;
-    this.loadCustomers();
+  createCustomer(): void {
+    this.router.navigate(['/admin/customers/create']);
   }
 
   editCustomer(customer: Customer): void{

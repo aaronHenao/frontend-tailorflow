@@ -5,14 +5,6 @@ import { environment } from '../../environments/environment';
 import { ResponseDto } from '../core/models/response.dto'; 
 import { Area } from '../core/models/area.model'; 
 
-
-interface AreasPaginatedResponse {
-    areas: Area[];
-    total: number;
-    page: number;
-    totalPages: number;
-}
-
 @Injectable({
   providedIn: 'root'
 })
@@ -20,13 +12,8 @@ export class AreasService {
   private readonly API_URL = `${environment.apiUrl}/areas`;
 
   constructor(private http: HttpClient) {}
-
   
-  getAllPaginated(page: number, limit: number): Observable<ResponseDto<AreasPaginatedResponse>> {
-    return this.http.get<ResponseDto<AreasPaginatedResponse>>(`${this.API_URL}?page=${page}&limit=${limit}`);
-  }
-  
-  getAllForForms(): Observable<ResponseDto<Area[]>> {
+  getAll(): Observable<ResponseDto<Area[]>> {
     return this.http.get<ResponseDto<Area[]>>(`${this.API_URL}/all`);
   }
 

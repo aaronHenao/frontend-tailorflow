@@ -1,20 +1,16 @@
-<mat-card>
-  <mat-card-header>
-    <mat-card-title>
-      <mat-icon>business</mat-icon> Gestión de Áreas
-    </mat-card-title>
-  </mat-card-header>
-
-  <mat-card-content>
-    <div class="header-actions">
+<div class="areas-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>business</mat-icon> Gestión de Áreas
+      </mat-card-title>
       <button mat-raised-button color="primary" (click)="createArea()">
         <mat-icon>add</mat-icon> Crear Área
       </button>
-    </div>
+    </mat-card-header>
 
-    <div class="table-container mat-elevation-z2" [class.is-loading]="isLoading">
-
-      <table mat-table [dataSource]="dataSource">
+    <mat-card-content>
+      <table mat-table [dataSource]="areas" class="areas-table">
 
         <ng-container matColumnDef="name">
           <th mat-header-cell *matHeaderCellDef> Nombre del Área </th>
@@ -37,15 +33,13 @@
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
-        <tr class="mat-row" *matNoDataRow>
-          <td class="mat-cell" [attr.colspan]="displayedColumns.length">No se encontraron áreas.</td>
-        </tr>
       </table>
-      </div>
-      <mat-paginator [length]="totalItems" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
-        (page)="onPageChange($event)" aria-label="Seleccionar página de áreas">
-      </mat-paginator>
-    
-  </mat-card-content>
-</mat-card>
+
+      @if(isLoading){
+      <div class="loading">Cargando areas...</div>
+      } @else if (!isLoading && areas.length === 0) {
+      <div class="no-data">No hay areas registradas.</div>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>

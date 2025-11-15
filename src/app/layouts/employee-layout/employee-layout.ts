@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { Navbar } from '../../components/navbar/navbar';
@@ -11,7 +10,6 @@ import { EMPLOYEE_MENU_ITEMS } from '../../common/menu-items';
   selector: 'app-employee-layout',
   standalone: true,
   imports: [
-    CommonModule,
     RouterModule,
     MatSidenavModule,
     Navbar,

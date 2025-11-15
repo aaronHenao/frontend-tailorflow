@@ -1,6 +1,4 @@
-// employee-profile.component.ts
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -14,7 +12,6 @@ import { Employee } from '../../../core/models/employee.model';
   selector: 'app-employee-profile',
   standalone: true,
   imports: [
-    CommonModule,
     MatCardModule,
     MatIconModule,
     MatButtonModule,
@@ -24,7 +21,7 @@ import { Employee } from '../../../core/models/employee.model';
   templateUrl: './employee-profile.html',
   styleUrl: './employee-profile.scss'
 })
-export class EmployeeProfileComponent implements OnInit {
+export class EmployeeProfile implements OnInit {
   employee: Employee | null = null;
   isLoading = true;
   errorMessage = '';
@@ -58,17 +55,5 @@ export class EmployeeProfileComponent implements OnInit {
         this.isLoading = false;
       }
     });
-  }
-
-  getStatusColor(state: string): 'primary' | 'warn' | 'accent' {
-    const normalizedState = state.toLowerCase();
-    
-    if (normalizedState.includes('active') || normalizedState.includes('activo')) {
-      return 'primary';
-    }
-    if (normalizedState.includes('inactive') || normalizedState.includes('inactivo')) {
-      return 'warn';
-    }
-    return 'accent';
   }
 }

@@ -1,6 +1,4 @@
-// completed-tasks.component.ts
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -25,7 +23,6 @@ interface GroupedCompletedTasks {
   selector: 'app-completed-tasks',
   standalone: true,
   imports: [
-    CommonModule,
     MatCardModule,
     MatIconModule,
     MatButtonModule,
@@ -61,7 +58,6 @@ export class CompletedTasks implements OnInit {
 
     this.tasksService.getAssignedTasks().subscribe({
       next: (response) => {
-        // Filtrar solo tareas completadas (estado 3)
         this.tasks = response.data.filter(task => task.id_state === 3);
         this.groupTasksByProduct();
         this.isLoading = false;

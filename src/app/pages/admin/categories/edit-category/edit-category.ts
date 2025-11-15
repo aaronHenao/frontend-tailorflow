@@ -1,5 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit} from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -7,7 +6,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { MatDividerModule } from '@angular/material/divider'; 
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CategoriesService } from '../../../../services/categories.service';
 import { Category } from '../../../../core/models/category.model';
@@ -16,14 +14,12 @@ import { Category } from '../../../../core/models/category.model';
   selector: 'app-edit-category',
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
     MatCardModule,
     MatIconModule,
-    MatDividerModule,
     MatProgressSpinnerModule
   ],
   templateUrl: './edit-category.html',
@@ -41,28 +37,22 @@ export class EditCategory implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private categoriesService: CategoriesService,
-    private cdr: ChangeDetectorRef 
   ) {
     this.initForm();
   }
 
   ngOnInit(): void {
-    // Obtiene el ID de la URL
     this.categoryId = +this.route.snapshot.params['id']; 
     this.loadCategory();
   }
 
   initForm(): void {
     this.editForm = this.fb.group({
-      // Validaciones basadas en UpdateCategoryDto
       name: ['', [Validators.required, Validators.maxLength(50)]],
       description: ['', [Validators.required, Validators.maxLength(100)]]
     });
   }
 
-  /**
-   * Carga los datos de la categoría por su ID.
-   */
   loadCategory(): void {
     this.categoriesService.getById(this.categoryId).subscribe({
       next: (response) => {
@@ -74,7 +64,6 @@ export class EditCategory implements OnInit {
         });
 
         this.isLoading = false;
-        this.cdr.detectChanges(); // Forzar actualización de la vista
       },
       error: (err) => {
         console.error('Error cargando categoría', err);
@@ -84,9 +73,7 @@ export class EditCategory implements OnInit {
     });
   }
 
-  /**
-   * Envía la data de actualización al backend.
-   */
+
   onSubmit(): void {
     if (this.editForm.invalid) {
       this.editForm.markAllAsTouched();
@@ -94,7 +81,6 @@ export class EditCategory implements OnInit {
     }
 
     this.isSaving = true;
-    // Usamos UpdateCategoryDto para el envío
     const updateData: Category = this.editForm.value; 
 
     this.categoriesService.update(this.categoryId, updateData).subscribe({

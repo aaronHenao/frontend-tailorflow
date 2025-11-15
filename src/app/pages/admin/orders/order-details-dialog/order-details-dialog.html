@@ -34,18 +34,16 @@
         <div class="info-section">
             <h3>Productos del Pedido</h3>
 
-            <div *ngIf="isLoadingProducts" class="loading">
-                Cargando productos...
-            </div>
-
-            <div *ngIf="!isLoadingProducts && products.length === 0" class="no-products">
-                No hay productos en este pedido
-            </div>
-
-            <div *ngIf="!isLoadingProducts && products.length > 0" class="products-list">
-                <div *ngFor="let product of products; let i = index" class="product-card">
+            @if(isLoadingProducts){
+            <div class="loading">Cargando productos...</div>
+            } @else if (products.length === 0) {
+            <div class="no-products">No hay productos en este pedido</div>
+            } @else {
+            <div class="products-list">
+                @for(product of products; track $index){
+                <div class="product-card">
                     <div class="product-header">
-                        <h4>{{ i + 1 }}. {{ product.name }}</h4>
+                        <h4>{{ $index + 1 }}. {{ product.name }}</h4>
                         <mat-chip [class]="'status-' + (product.state_name?.toLowerCase() || 'pendiente')"
                             class="small-chip">
                             {{ product.state_name || 'N/A' }}
@@ -65,26 +63,35 @@
                             <span class="detail-value">{{ product.customized_label }}</span>
                         </div>
 
-                        <div class="detail-row" *ngIf="product.fabric">
+                        @if(product.fabric){
+                        <div class="detail-row">
                             <mat-icon class="detail-icon">texture</mat-icon>
                             <span class="detail-label">Tela:</span>
                             <span class="detail-value">{{ product.fabric }}</span>
                         </div>
+                        }
 
-                        <div class="detail-row" *ngIf="product.dimensions">
+                        @if(product.dimensions){
+                        <div class="detail-row">
                             <mat-icon class="detail-icon">straighten</mat-icon>
                             <span class="detail-label">Dimensiones:</span>
                             <span class="detail-value">{{ product.dimensions }}</span>
                         </div>
+                        }
 
-                        <div class="detail-row" *ngIf="product.description">
+                        @if(product.description){
+                        <div class="detail-row">
                             <mat-icon class="detail-icon">description</mat-icon>
                             <span class="detail-label">Descripción:</span>
                             <span class="detail-value">{{ product.description }}</span>
                         </div>
+                        }
+
                     </div>
                 </div>
+                }
             </div>
+            }
         </div>
     </div>
 </mat-dialog-content>

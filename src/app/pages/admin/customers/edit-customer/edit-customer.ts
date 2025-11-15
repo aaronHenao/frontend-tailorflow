@@ -1,5 +1,4 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -7,7 +6,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { MatDividerModule } from '@angular/material/divider'; 
 import { CustomersService } from '../../../../services/customers.service';
 import { Customer } from '../../../../core/models/customer.model';
 
@@ -15,14 +13,12 @@ import { Customer } from '../../../../core/models/customer.model';
   selector: 'app-edit-customer',
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
     MatCardModule,
     MatIconModule,
-    MatDividerModule
   ],
   templateUrl: './edit-customer.html',
   styleUrl: './edit-customer.scss'
@@ -39,7 +35,6 @@ export class EditCustomer implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private customersService: CustomersService,
-    private cdr: ChangeDetectorRef 
   ) {
     this.initForm();
   }
@@ -71,13 +66,11 @@ export class EditCustomer implements OnInit {
         });
 
         this.isLoading = false;
-        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error cargando cliente', err);
         alert('Error al cargar el cliente');
         this.isLoading = false;
-        this.cdr.detectChanges(); 
         this.router.navigate(['/admin/customers']);
       }
     });
@@ -93,15 +86,16 @@ export class EditCustomer implements OnInit {
     const formValue = this.editForm.value; 
     const updateData: any = {};
 
-    if (formValue.name) updateData.name = formValue.name;
-    if (formValue.address) updateData.address = formValue.address;
-    if (formValue.phone) updateData.phone = formValue.phone;
-    
-    if (Object.keys(updateData).length === 0) {
-        alert('No hay cambios para guardar.');
-        this.isSaving = false;
-        return;
+    if (formValue.name){
+      updateData.name = formValue.name;
     }
+
+    if (formValue.address){
+     updateData.address = formValue.address; 
+    }
+    if (formValue.phone){
+      updateData.phone = formValue.phone;
+    } 
 
     this.customersService.update(this.customerId, updateData).subscribe({
       next: () => {

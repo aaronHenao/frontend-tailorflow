@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -9,20 +8,17 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { EmployeesService } from '../../../../services/employee.service';
 import { Employee } from '../../../../core/models/employee.model';
-import { MatDividerModule } from '@angular/material/divider'; 
 
 @Component({
   selector: 'app-edit-employee',
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
     MatButtonModule,
     MatCardModule,
-    MatDividerModule 
   ],
   templateUrl: './edit-employee.html',
   styleUrl: './edit-employee.scss'
@@ -101,7 +97,7 @@ export class EditEmployee implements OnInit {
 
     this.employeesService.update(this.employeeId, updateData).subscribe({
       next: () => {
-        alert('Empleado **actualizado exitosamente**');
+        alert('Empleado actualizado exitosamente');
         this.router.navigate(['/admin/employees']);
       },
       error: (err) => {

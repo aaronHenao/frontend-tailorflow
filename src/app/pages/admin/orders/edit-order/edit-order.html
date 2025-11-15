@@ -5,14 +5,13 @@
     </mat-card-header>
 
     <mat-card-content>
-      <div *ngIf="isLoading" class="loading">
-        Cargando pedido...
-      </div>
-
-      <form [formGroup]="editForm" *ngIf="!isLoading">
+      @if(isLoading){
+      <div class="loading">Cargando pedido...</div>
+      } @else {
+      <form [formGroup]="editForm">
         <div class="form-section">
           <h3>Información del Pedido</h3>
-          
+
           <div class="readonly-info">
             <div class="info-row">
               <span class="label">Cliente:</span>
@@ -33,9 +32,10 @@
             <input matInput [matDatepicker]="picker" formControlName="estimated_delivery_date">
             <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
-            <mat-error *ngIf="editForm.get('estimated_delivery_date')?.hasError('required')">
-              La fecha es requerida
-            </mat-error>
+            @if(editForm.get('estimated_delivery_date')?.hasError('required')){
+            <mat-error>La fecha es requerida</mat-error>
+            }
+
           </mat-form-field>
         </div>
 
@@ -46,9 +46,10 @@
           <p class="note">Solo puedes editar la tela, dimensiones y descripción de cada producto.</p>
 
           <div formArrayName="products" class="products-list">
-            <mat-card *ngFor="let product of products.controls; let i = index" [formGroupName]="i" class="product-card">
+            @for(product of products.controls; track $index){
+            <mat-card [formGroupName]="$index" class="product-card">
               <mat-card-header>
-                <mat-card-title>{{ i + 1 }}. {{ products.at(i).get('name')?.value }}</mat-card-title>
+                <mat-card-title>{{ $index + 1 }}. {{ products.at($index).get('name')?.value }}</mat-card-title>
               </mat-card-header>
 
               <mat-card-content>
@@ -56,9 +57,9 @@
                   <mat-form-field appearance="outline">
                     <mat-label>Tela</mat-label>
                     <input matInput formControlName="fabric">
-                    <mat-error *ngIf="product.get('fabric')?.hasError('required')">
-                      La tela es requerida
-                    </mat-error>
+                    @if(product.get('fabric')?.hasError('required')){
+                      <mat-error>La tela es requerida</mat-error>
+                    }
                   </mat-form-field>
 
                   <mat-form-field appearance="outline">
@@ -73,6 +74,8 @@
                 </div>
               </mat-card-content>
             </mat-card>
+            }
+
           </div>
         </div>
 
@@ -81,11 +84,15 @@
           <button mat-button type="button" (click)="onCancel()" [disabled]="isSaving">
             Cancelar
           </button>
-          <button mat-raised-button color="primary" type="button" (click)="onSubmit()" [disabled]="!editForm.valid || isSaving">
+          <button mat-raised-button color="primary" type="button" (click)="onSubmit()"
+            [disabled]="!editForm.valid || isSaving">
             {{ isSaving ? 'Guardando...' : 'Guardar Cambios' }}
           </button>
         </div>
       </form>
+      }
+
+
     </mat-card-content>
   </mat-card>
 </div>

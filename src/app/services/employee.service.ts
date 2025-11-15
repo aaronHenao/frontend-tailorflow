@@ -13,16 +13,7 @@ export class EmployeesService {
 
   constructor(private http: HttpClient) {}
 
-  getAll(page: number = 1, limit: number = 10): Observable<ResponseDto<{
-    employees: Employee[];
-    total: number;
-    page: number;
-    totalPages: number;
-  }>> {
-    return this.http.get<ResponseDto<any>>(`${this.API_URL}?page=${page}&limit=${limit}`);
-  }
-
-  getAllForForms(): Observable<ResponseDto<Employee[]>> {
+  getAll(): Observable<ResponseDto<Employee[]>> {
     return this.http.get<ResponseDto<Employee[]>>(`${this.API_URL}/all`);
   }
 

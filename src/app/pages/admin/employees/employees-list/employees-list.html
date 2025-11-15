@@ -1,8 +1,10 @@
 <div class="employees-container">
     <mat-card>
         <mat-card-header>
-            <mat-card-title>Gestión de Empleados</mat-card-title>
-            <button mat-raised-button color="primary" routerLink="/admin/employees/create">
+            <mat-card-title>
+                <mat-icon>badge</mat-icon> Gestión de Empleados
+            </mat-card-title>
+            <button mat-raised-button color="primary" (click)="createEmployee()">
                 <mat-icon>add</mat-icon>
                 Crear Empleado
             </button>
@@ -48,12 +50,12 @@
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
             </table>
-            <mat-paginator [length]="total" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
-                (page)="onPageChange($event)" showFirstLastButtons>
-            </mat-paginator>
+            @if (isLoading) {
+            <div class="loading">Cargando empleados...</div>
+            } @else if (!isLoading && employees.length === 0) {
+            <div class="no-data">No hay empleados registrados</div>
+            }
 
-            <div *ngIf="isLoading" class="loading">Cargando empleados...</div>
-            <div *ngIf="!isLoading && employees.length === 0" class="no-data">No hay empleados registrados</div>
         </mat-card-content>
     </mat-card>
 </div>

@@ -2,7 +2,7 @@
     <mat-card>
         <mat-card-header>
             <mat-card-title>Gestión de Clientes</mat-card-title>
-            <button mat-raised-button color="primary" routerLink="/admin/customers/create">
+            <button mat-raised-button color="primary" (click)="createCustomer()">
                 <mat-icon>add</mat-icon>
                 Crear Cliente
             </button>
@@ -43,11 +43,12 @@
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
             </table>
-            <mat-paginator [length]="total" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
-                (page)="onPageChange($event)" showFirstLastButtons>
-            </mat-paginator>
-            <div *ngIf="isLoading" class="loading">Cargando clientes...</div>
-            <div *ngIf="!isLoading && customers.length === 0" class="no-data">No hay clientes registrados</div>
+
+            @if (isLoading) {
+            <div class="loading">Cargando clientes...</div>
+            } @else if (!isLoading && customers.length === 0) {
+            <div class="no-data">No hay clientes registrados</div>
+            }
         </mat-card-content>
     </mat-card>
 </div>

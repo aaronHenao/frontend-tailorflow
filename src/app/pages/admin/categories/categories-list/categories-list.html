@@ -1,64 +1,50 @@
-<mat-card>
-  <mat-card-header>
-    <mat-card-title>
-      <mat-icon>label_important</mat-icon> Gestión de Categorías
-    </mat-card-title>
-  </mat-card-header>
-
-  <mat-card-content>
-    <div class="header-actions">
+<div class="categories-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>label_important</mat-icon> Gestión de Categorías
+      </mat-card-title>
       <button mat-raised-button color="primary" (click)="createCategory()">
-        <mat-icon>add</mat-icon> Crear Categoría
-      </button>
-    </div>
+          <mat-icon>add</mat-icon> Crear Categoría
+        </button>
+    </mat-card-header>
 
-    <div class="table-container mat-elevation-z2" [class.is-loading]="isLoading">
-      <div *ngIf="isLoading" class="loading-overlay">
-        <mat-spinner diameter="50"></mat-spinner>
-      </div>
+    <mat-card-content>
+        <table mat-table [dataSource]="categories" class="categories-table">
 
-      <table mat-table [dataSource]="dataSource">
+          <ng-container matColumnDef="id_category">
+            <th mat-header-cell *matHeaderCellDef> ID </th>
+            <td mat-cell *matCellDef="let category"> {{ category.id_category }} </td>
+          </ng-container>
 
-        <ng-container matColumnDef="id_category">
-          <th mat-header-cell *matHeaderCellDef> ID </th>
-          <td mat-cell *matCellDef="let category"> {{ category.id_category }} </td>
-        </ng-container>
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef> Nombre </th>
+            <td mat-cell *matCellDef="let category"> {{ category.name }} </td>
+          </ng-container>
 
-        <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef> Nombre </th>
-          <td mat-cell *matCellDef="let category"> {{ category.name }} </td>
-        </ng-container>
+          <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef> Descripción </th>
+            <td mat-cell *matCellDef="let category"> {{ category.description }} </td>
+          </ng-container>
 
-        <ng-container matColumnDef="description">
-          <th mat-header-cell *matHeaderCellDef> Descripción </th>
-          <td mat-cell *matCellDef="let category"> {{ category.description }} </td>
-        </ng-container>
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef> Acciones </th>
+            <td mat-cell *matCellDef="let category">
+              <button mat-icon-button color="accent" (click)="editCategory(category)" aria-label="Editar categoría">
+                <mat-icon>edit</mat-icon>
+              </button>
+            </td>
+          </ng-container>
 
-        <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef> Acciones </th>
-          <td mat-cell *matCellDef="let category">
-            <button mat-icon-button color="accent" (click)="editCategory(category)" aria-label="Editar categoría">
-              <mat-icon>edit</mat-icon>
-            </button>
-          </td>
-        </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      @if(isLoading){
+        <div class="loading">Cargando categorías...</div>
+      } @else if (!isLoading && categories.length === 0) {
+        <div class="no-data">No hay categorías registradas.</div>
+      }
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        
-        <tr class="mat-row" *matNoDataRow>
-          <td class="mat-cell" [attr.colspan]="displayedColumns.length">No se encontraron categorías.</td>
-        </tr>
-      </table>
-    </div>
-    
-    <mat-paginator 
-      [length]="totalItems"
-      [pageSize]="pageSize"
-      [pageSizeOptions]="pageSizeOptions"
-      (page)="onPageChange($event)"
-      aria-label="Seleccionar página de categorías">
-    </mat-paginator>
-
-  </mat-card-content>
-</mat-card>
+    </mat-card-content>
+  </mat-card>
+</div>

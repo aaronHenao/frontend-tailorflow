@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
@@ -15,7 +14,6 @@ import { Category } from '../../../../core/models/category.model';
   selector: 'app-categories-list',
   standalone: true,
   imports: [
-    CommonModule,
     RouterModule,
     MatTableModule,
     MatPaginatorModule,
@@ -29,13 +27,7 @@ import { Category } from '../../../../core/models/category.model';
   styleUrl: './categories-list.scss'
 })
 export class CategoriesList implements OnInit {
-  totalItems = 0;
-  pageSize = 10;
-  currentPage = 1;
-  pageSizeOptions: number[] = [5, 10, 25, 50];
-
   categories: Category[] = [];
-  dataSource = new MatTableDataSource<Category>(this.categories);
   displayedColumns: string[] = ['id_category', 'name', 'description', 'actions']; 
   isLoading = false;
 
@@ -48,28 +40,17 @@ export class CategoriesList implements OnInit {
   loadCategories(): void {
     this.isLoading = true;
     
-    this.categoriesService.getAllPaginated(this.currentPage, this.pageSize).subscribe({ 
+    this.categoriesService.getAll().subscribe({ 
       next: (response) => {
-        this.categories = response.data.categories; 
-        this.totalItems = response.data.total; 
-        this.dataSource.data = this.categories;
+        this.categories = response.data; 
         this.isLoading = false;
       },
       error: (err) => {
         console.error('Error cargando categorías', err);
         this.isLoading = false;
-        alert('Error al cargar la lista de categorías: ' + (err.error?.message || 'Error de conexión')); 
-        this.categories = [];
-        this.dataSource.data = [];
-        this.totalItems = 0;
+        alert('Error al cargar la lista de categorías: ' + (err.error?.message || 'Error de conexión'));
       }
     });
-  }
-
-  onPageChange(event: PageEvent): void {
-    this.currentPage = event.pageIndex + 1; 
-    this.pageSize = event.pageSize;
-    this.loadCategories();
   }
 
   createCategory(): void {

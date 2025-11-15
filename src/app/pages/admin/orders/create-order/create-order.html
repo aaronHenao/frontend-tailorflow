@@ -16,13 +16,15 @@
                   placeholder="Buscar cliente...">
                 <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onCustomerSelected($event)"
                   [displayWith]="displayCustomerName">
-                  <mat-option *ngFor="let customer of filteredCustomers | async" [value]="customer">
+                  @for(customer of filteredCustomers | async; track customer){
+                  <mat-option [value]="customer">
                     {{ customer.name }}
                   </mat-option>
+                  }
                 </mat-autocomplete>
-                <mat-error *ngIf="orderForm.get('id_customer')?.hasError('required')">
-                  El cliente es requerido
-                </mat-error>
+                @if(orderForm.get('id_customer')?.hasError('required')){
+                <mat-error>El cliente es requerido</mat-error>
+                }
               </mat-form-field>
 
               <mat-form-field appearance="outline" class="full-width">
@@ -30,9 +32,9 @@
                 <input matInput [matDatepicker]="picker" formControlName="estimated_delivery_date">
                 <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
-                <mat-error *ngIf="orderForm.get('estimated_delivery_date')?.hasError('pastDate')">
-                  La fecha debe ser hoy o posterior
-                </mat-error>
+                @if(orderForm.get('estimated_delivery_date')?.hasError('pastDate')){
+                <mat-error>La fecha debe ser hoy o posterior</mat-error>
+                }
               </mat-form-field>
             </div>
 
@@ -52,11 +54,11 @@
               </button>
 
               <div formArrayName="products" class="products-list">
-                <mat-card *ngFor="let product of products.controls; let i = index" [formGroupName]="i"
-                  class="product-card">
+                @for(product of products.controls; track $index){
+                <mat-card [formGroupName]="$index" class="product-card">
                   <mat-card-header>
-                    <mat-card-title>Producto {{ i + 1 }}</mat-card-title>
-                    <button mat-icon-button color="warn" type="button" (click)="removeProduct(i)">
+                    <mat-card-title>Producto {{ $index + 1 }}</mat-card-title>
+                    <button mat-icon-button color="warn" type="button" (click)="removeProduct($index)">
                       <mat-icon>delete</mat-icon>
                     </button>
                   </mat-card-header>
@@ -66,18 +68,23 @@
                       <mat-form-field appearance="outline">
                         <mat-label>Nombre del Producto</mat-label>
                         <input matInput formControlName="name">
-                        <mat-error *ngIf="getProductGroup(i).get('name')?.hasError('required')">Requerido</mat-error>
+                        @if(getProductGroup($index).get('name')?.hasError('required')){
+                          <mat-error>Requerido</mat-error>
+                        }
                       </mat-form-field>
 
                       <mat-form-field appearance="outline">
                         <mat-label>Categoría</mat-label>
                         <mat-select formControlName="id_category">
-                          <mat-option *ngFor="let category of categories" [value]="category.id_category">
+                          @for(category of categories; track category.id_category){
+                            <mat-option [value]="category.id_category">
                             {{ category.name }}
                           </mat-option>
+                          }
                         </mat-select>
-                        <mat-error
-                          *ngIf="getProductGroup(i).get('id_category')?.hasError('required')">Requerido</mat-error>
+                        @if(getProductGroup($index).get('id_category')?.hasError('required')){
+                          <mat-error>Requerido</mat-error>
+                        }
                       </mat-form-field>
 
                       <mat-checkbox formControlName="customized">Personalizado</mat-checkbox>
@@ -85,7 +92,9 @@
                       <mat-form-field appearance="outline">
                         <mat-label>Tela</mat-label>
                         <input matInput formControlName="fabric">
-                        <mat-error *ngIf="getProductGroup(i).get('fabric')?.hasError('required')">Requerido</mat-error>
+                        @if(getProductGroup($index).get('fabric')?.hasError('required')){
+                          <mat-error>Requerido</mat-error>
+                        }
                       </mat-form-field>
 
                       <mat-form-field appearance="outline">
@@ -100,11 +109,12 @@
                     </div>
                   </mat-card-content>
                 </mat-card>
+                }
               </div>
 
-              <div *ngIf="products.length === 0" class="no-products">
-                No hay productos agregados. Haz clic en "Agregar Producto" para comenzar.
-              </div>
+              @if(products.length === 0){
+                <div class="no-products"> No hay productos agregados. Haz clic en "Agregar Producto" para comenzar.</div>
+              }
             </div>
 
             <div class="stepper-actions">
@@ -116,57 +126,7 @@
         </mat-step>
 
 
-        <mat-step [stepControl]="productsForm" label="Asignar Materiales">
-          <div class="materials-section">
-            <div *ngFor="let product of products.controls; let i = index" class="product-materials">
-              <h3>Materiales para: {{ product.get('name')?.value || 'Producto ' + (i + 1) }}</h3>
-
-              <button mat-raised-button color="accent" type="button" (click)="addMaterial(i)">
-                <mat-icon>add</mat-icon>
-                Agregar Material
-              </button>
-
-              <div [formGroup]="getProductGroup(i)">
-                <div formArrayName="materials" class="materials-list">
-                  <div *ngFor="let material of getMaterials(i).controls; let j = index" [formGroupName]="j"
-                    class="material-row">
-                    <mat-form-field appearance="outline">
-                      <mat-label>Material</mat-label>
-                      <mat-select formControlName="id_material">
-                        <mat-option *ngFor="let mat of materials" [value]="mat.id_material">
-                          {{ mat.name }} (Stock: {{ mat.current_stock }})
-                        </mat-option>
-                      </mat-select>
-                      <mat-error
-                        *ngIf="getMaterials(i).at(j).get('id_material')?.hasError('required')">Requerido</mat-error>
-                      <mat-error *ngIf="getMaterials(i).at(j).get('quantity')?.hasError('stockInsuficiente')">
-                        Stock insuficiente. Disponible:
-                        <strong>{{ getMaterials(i).at(j).get('quantity')?.getError('stockInsuficiente')?.available
-                          }}</strong>
-                      </mat-error>
-                    </mat-form-field>
-
-                    <mat-form-field appearance="outline">
-                      <mat-label>Cantidad</mat-label>
-                      <input matInput type="number" formControlName="quantity" min="1">
-                      <mat-error
-                        *ngIf="getMaterials(i).at(j).get('quantity')?.hasError('required')">Requerido</mat-error>
-                    </mat-form-field>
-
-                    <button mat-icon-button color="warn" type="button" (click)="removeMaterial(i, j)"
-                      [disabled]="isSubmitting">
-                      <mat-icon>delete</mat-icon>
-                    </button>
-                  </div>
-                </div>
-
-                <div *ngIf="getMaterials(i).length === 0" class="no-materials">
-                  No hay materiales asignados a este producto.
-                </div>
-              </div>
-            </div>
-          </div>
-
+        <mat-step [stepControl]="productsForm" label="Confirmar Pedido">
           <div class="stepper-actions">
             <button mat-button matStepperPrevious [disabled]="isSubmitting">Anterior</button>
             <button mat-raised-button color="primary" (click)="onSubmit()"

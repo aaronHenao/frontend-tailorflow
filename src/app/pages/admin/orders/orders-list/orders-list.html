@@ -2,7 +2,7 @@
   <mat-card>
     <mat-card-header>
       <mat-card-title>Gestión de Pedidos</mat-card-title>
-      <button mat-raised-button color="primary" routerLink="/admin/orders/create">
+      <button mat-raised-button color="primary" (click)="createOrder()">
         <mat-icon>add</mat-icon>
         Crear Pedido
       </button>
@@ -10,12 +10,6 @@
 
     <mat-card-content>
       <table mat-table [dataSource]="orders" class="orders-table">
-
-        <ng-container matColumnDef="id_order">
-          <th mat-header-cell *matHeaderCellDef>ID</th>
-          <td mat-cell *matCellDef="let order">{{ order.id_order }}</td>
-        </ng-container>
-
 
         <ng-container matColumnDef="customer_name">
           <th mat-header-cell *matHeaderCellDef>Cliente</th>
@@ -56,12 +50,12 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       </table>
-      <mat-paginator [length]="total" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
-        (page)="onPageChange($event)" showFirstLastButtons>
-      </mat-paginator>
-
-      <div *ngIf="isLoading" class="loading">Cargando pedidos...</div>
-      <div *ngIf="!isLoading && orders.length === 0" class="no-data">No hay pedidos registrados</div>
+      
+      @if(isLoading){
+        <div class="loading">Cargando pedidos...</div>
+      } @else if (!isLoading && orders.length === 0) {
+        <div class="no-data">No hay pedidos registrados</div>
+      }
     </mat-card-content>
   </mat-card>
 </div>

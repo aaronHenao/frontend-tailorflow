@@ -1,5 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit} from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
@@ -15,7 +14,6 @@ import { Area } from '../../../../core/models/area.model';
   selector: 'app-areas-list',
   standalone: true,
   imports: [
-    CommonModule,
     RouterModule,
     MatTableModule,
     MatPaginatorModule,
@@ -29,17 +27,9 @@ import { Area } from '../../../../core/models/area.model';
   styleUrl: './areas-list.scss'
 })
 export class AreasList implements OnInit {
-  totalItems = 0;
-  pageSize = 10;
-  currentPage = 1;
-  pageSizeOptions: number[] = [5, 10, 25, 50];
-
   areas: Area[] = [];
-  dataSource = new MatTableDataSource<Area>(this.areas);
   displayedColumns: string[] = ['name', 'roles_count', 'actions']; 
   isLoading = false;
-
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(private areasService: AreasService, private router: Router) { }
 
@@ -49,29 +39,17 @@ export class AreasList implements OnInit {
 
   loadAreas(): void {
     this.isLoading = true;
-    
-    this.areasService.getAllPaginated(this.currentPage, this.pageSize).subscribe({ 
+    this.areasService.getAll().subscribe({ 
       next: (response) => {
-        this.areas = response.data.areas; 
-        this.totalItems = response.data.total; 
-        this.dataSource.data = this.areas;
+        this.areas = response.data;
         this.isLoading = false;
       },
       error: (err) => {
         console.error('Error cargando áreas', err);
         this.isLoading = false;
-        alert('Error al cargar la lista de áreas: ' + (err.error?.message || 'Error de conexión')); 
-        this.areas = [];
-        this.dataSource.data = [];
-        this.totalItems = 0;
+        alert('Error al cargar la lista de áreas: ' + (err.error?.message || 'Error de conexión'));
       }
     });
-  }
-
-  onPageChange(event: PageEvent): void {
-    this.currentPage = event.pageIndex + 1; 
-    this.pageSize = event.pageSize;
-    this.loadAreas();
   }
 
   createArea(): void {

@@ -50,7 +50,7 @@
   margin-top: 16px;
 }
 
-.no-products, .no-materials {
+.no-products {
   text-align: center;
   padding: 40px;
   color: var(--mat-sys-on-surface-variant);
@@ -59,35 +59,3 @@
   margin: 20px 0;
 }
 
-.materials-section {
-  margin: 20px 0;
-}
-
-.product-materials {
-  margin-bottom: 32px;
-  padding: 20px;
-  background-color: var(--mat-sys-surface-container-low);
-  border-radius: 8px;
-
-  h3 {
-    margin-bottom: 16px;
-    color: var(--mat-sys-primary);
-  }
-}
-
-.materials-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 16px;
-}
-
-.material-row {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-
-  mat-form-field {
-    flex: 1;
-  }
-}

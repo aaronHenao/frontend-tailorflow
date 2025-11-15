@@ -5,57 +5,60 @@
     </mat-card-header>
 
     <mat-card-content>
-      <div *ngIf="isLoading" class="loading">
-        Cargando empleado...
-      </div>
-
-      <form [formGroup]="employeeForm" *ngIf="!isLoading">
-        <div class="readonly-info">
-          <div class="info-row">
-            <span class="label">Cédula:</span>
-            <span class="value">{{ employee.cc }}</span>
+      @if(isLoading){
+      <div class="loading">Cargando empleado...</div>
+      } @else {
+        <form [formGroup]="employeeForm">
+          <div class="readonly-info">
+            <div class="info-row">
+              <span class="label">Cédula:</span>
+              <span class="value">{{ employee.cc }}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Nombre:</span>
+              <span class="value">{{ employee.name }}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Rol:</span>
+              <span class="value">{{ employee.role.name || 'N/A' }}</span>
+            </div>
           </div>
-          <div class="info-row">
-            <span class="label">Nombre:</span>
-            <span class="value">{{ employee.name }}</span>
+
+          <div class="form-section">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Estado</mat-label>
+              <mat-select formControlName="state">
+                @for (estado of estados; track estado.value) {
+                <mat-option [value]="estado.value">
+                  {{ estado.label }}
+                </mat-option>
+                }
+              </mat-select>
+              @if(employeeForm.get('state')?.hasError('required')){
+              <mat-error>El estado es requerido</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Nueva Contraseña (opcional)</mat-label>
+              <input matInput type="password" formControlName="password" placeholder="Dejar vacío para no cambiar">
+              @if(employeeForm.get('password')?.hasError('minlength')){
+              <mat-error>Debe tener al menos 6 caracteres</mat-error>
+              }
+            </mat-form-field>
           </div>
-          <div class="info-row">
-            <span class="label">Rol:</span>
-            <span class="value">{{ employee.role?.name || 'N/A' }}</span>
+
+          <div class="actions">
+            <button mat-button type="button" (click)="onCancel()" [disabled]="isSaving">
+              Cancelar
+            </button>
+            <button mat-raised-button color="primary" type="button" (click)="onSubmit()"
+              [disabled]="!employeeForm.valid || isSaving">
+              {{ isSaving ? 'Guardando...' : 'Guardar Cambios' }}
+            </button>
           </div>
-        </div>
-
-        <div class="form-section">
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Estado</mat-label>
-            <mat-select formControlName="state">
-              <mat-option *ngFor="let estado of estados" [value]="estado.value">
-                {{ estado.label }}
-              </mat-option>
-            </mat-select>
-            <mat-error *ngIf="employeeForm.get('state')?.hasError('required')">
-              El estado es requerido
-            </mat-error>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Nueva Contraseña (opcional)</mat-label>
-            <input matInput type="password" formControlName="password" placeholder="Dejar vacío para no cambiar">
-            <mat-error *ngIf="employeeForm.get('password')?.hasError('minlength')">
-              Debe tener al menos 6 caracteres
-            </mat-error>
-          </mat-form-field>
-        </div>
-
-        <div class="actions">
-          <button mat-button type="button" (click)="onCancel()" [disabled]="isSaving">
-            Cancelar
-          </button>
-          <button mat-raised-button color="primary" type="button" (click)="onSubmit()" [disabled]="!employeeForm.valid || isSaving">
-            {{ isSaving ? 'Guardando...' : 'Guardar Cambios' }}
-          </button>
-        </div>
-      </form>
+        </form>
+      }
     </mat-card-content>
   </mat-card>
 </div>

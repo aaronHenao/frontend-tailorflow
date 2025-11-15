@@ -1,5 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -15,14 +14,13 @@ import { Role } from '../../../../core/models/role.model';
   selector: 'app-edit-role',
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
     MatCardModule,
     MatIconModule,
-    MatDividerModule
+    MatDividerModule,
   ],
   templateUrl: './edit-role.html',
   styleUrl: './edit-role.scss'
@@ -39,7 +37,6 @@ export class EditRole implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private rolesService: RolesService,
-    private cdr: ChangeDetectorRef 
   ) {
     this.initForm();
   }
@@ -69,7 +66,6 @@ export class EditRole implements OnInit {
         });
 
         this.isLoading = false;
-        this.cdr.detectChanges(); 
       },
       error: (err) => {
         console.error('Error cargando rol', err);

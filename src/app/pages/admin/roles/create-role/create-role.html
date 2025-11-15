@@ -1,58 +1,68 @@
 <div class="create-role-container">
   <mat-card>
     <mat-card-header>
-      <mat-card-title>
-        <mat-icon>add_box</mat-icon> Crear Nuevo Rol
-      </mat-card-title>
+      <mat-card-title>Crear Rol</mat-card-title>
     </mat-card-header>
 
-    <mat-divider></mat-divider>
+    <mat-card-content>
+      @if (isLoading) {
+        <div class="loading">Cargando dependencias...</div>
+      } @else {
+        <form [formGroup]="createForm">
+          <div class="form-section">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Nombre del Rol</mat-label>
+              <input matInput formControlName="name" placeholder="Ej: Administrador">
+              @if (createForm.get('name')?.hasError('required')) {
+                <mat-error>El nombre es requerido</mat-error>
+              }
+              @if (createForm.get('name')?.hasError('maxlength')) {
+                <mat-error>Máximo 50 caracteres</mat-error>
+              }
+            </mat-form-field>
 
-    <mat-card-content class="form-content">
-      <div *ngIf="isLoading" class="loading-spinner">
-        Cargando dependencias...
-      </div>
-      
-      <form [formGroup]="createForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading">
-        
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Nombre del Rol</mat-label>
-          <input matInput formControlName="name" placeholder="Ej: Administrador">
-          <mat-icon matSuffix>assignment_ind</mat-icon>
-          <mat-error *ngIf="createForm.get('name')?.hasError('required')">El nombre es requerido.</mat-error>
-          <mat-error *ngIf="createForm.get('name')?.hasError('maxlength')">Máximo 50 caracteres.</mat-error>
-        </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Descripción</mat-label>
+              <textarea matInput formControlName="description" placeholder="Descripción de las funciones"></textarea>
+              @if (createForm.get('description')?.hasError('required')) {
+                <mat-error>La descripción es obligatoria</mat-error>
+              }
+              @if (createForm.get('description')?.hasError('maxlength')) {
+                <mat-error>Máximo 100 caracteres</mat-error>
+              }
+            </mat-form-field>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Descripción</mat-label>
-          <textarea matInput formControlName="description" placeholder="Descripción de las funciones"></textarea>
-          <mat-icon matSuffix>description</mat-icon>
-          <mat-error *ngIf="createForm.get('description')?.hasError('required')">La descripción es obligatoria.</mat-error>
-          <mat-error *ngIf="createForm.get('description')?.hasError('maxlength')">Máximo 100 caracteres.</mat-error>
-        </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Área</mat-label>
+              <mat-select formControlName="id_area">
+                @for (area of areas; track area.id_area) {
+                  <mat-option [value]="area.id_area">
+                    {{ area.name }}
+                  </mat-option>
+                }
+              </mat-select>
+              @if (createForm.get('id_area')?.hasError('required')) {
+                <mat-error>El área es obligatoria</mat-error>
+              }
+            </mat-form-field>
+          </div>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Área</mat-label>
-          <mat-select formControlName="id_area" required>
-            <mat-option *ngFor="let area of areas" [value]="area.id_area">
-              {{ area.name }}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="createForm.get('id_area')?.invalid && createForm.get('id_area')?.touched">
-            El área es obligatoria.
-          </mat-error>
-        </mat-form-field>
-
-        <mat-card-actions class="actions">
-          <button mat-raised-button color="primary" type="submit" [disabled]="isSaving || isLoading">
-            <mat-icon>{{ isSaving ? 'loop' : 'save' }}</mat-icon> 
-            {{ isSaving ? 'Creando...' : 'Crear Rol' }}
-          </button>
-          <button mat-button type="button" (click)="onCancel()" [disabled]="isSaving">
-            Cancelar
-          </button>
-        </mat-card-actions>
-      </form>
+          <div class="actions">
+            <button mat-button type="button" (click)="onCancel()" [disabled]="isSaving">
+              Cancelar
+            </button>
+            <button
+              mat-raised-button
+              color="primary"
+              type="button"
+              (click)="onSubmit()"
+              [disabled]="!createForm.valid || isSaving"
+            >
+              {{ isSaving ? 'Guardando...' : 'Crear Rol' }}
+            </button>
+          </div>
+        </form>
+      }
     </mat-card-content>
   </mat-card>
 </div>

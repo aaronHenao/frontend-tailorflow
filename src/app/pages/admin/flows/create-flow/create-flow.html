@@ -5,41 +5,48 @@
     </mat-card-header>
 
     <mat-card-content>
+      @if (isLoading) {
+      <div class="loading">Cargando dependencias...</div>
+      } @else {
       <form [formGroup]="flowForm">
         <div class="form-section">
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Categoría</mat-label>
             <mat-select formControlName="id_category">
-              <mat-option *ngFor="let category of categories" [value]="category.id_category">
+              @for(category of categories; track category.id_category){
+              <mat-option [value]="category.id_category">
                 {{ category.name }}
               </mat-option>
+              }
             </mat-select>
-            <mat-error *ngIf="flowForm.get('id_category')?.hasError('required')">
-              La categoría es requerida
-            </mat-error>
+            @if(flowForm.get('id_category')?.hasError('required')){
+            <mat-error>La categoría es requerida</mat-error>
+            }
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Rol</mat-label>
             <mat-select formControlName="id_role">
-              <mat-option *ngFor="let role of roles" [value]="role.id_role">
+              @for(role of roles; track role.id_role){
+              <mat-option [value]="role.id_role">
                 {{ role.name }} - {{ role.area?.name }}
               </mat-option>
+              }
             </mat-select>
-            <mat-error *ngIf="flowForm.get('id_role')?.hasError('required')">
-              El rol es requerido
-            </mat-error>
+            @if(flowForm.get('id_role')?.hasError('required')){
+              <mat-error>El rol es requerido</mat-error>
+            }
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Secuencia (Paso)</mat-label>
             <input matInput type="number" formControlName="sequence" min="1" placeholder="Ej: 1, 2, 3...">
-            <mat-error *ngIf="flowForm.get('sequence')?.hasError('required')">
-              La secuencia es requerida
-            </mat-error>
-            <mat-error *ngIf="flowForm.get('sequence')?.hasError('min')">
-              Debe ser al menos 1
-            </mat-error>
+            @if(flowForm.get('sequence')?.hasError('required')){
+              <mat-error>La secuencia es requerida</mat-error>
+            }
+            @if(flowForm.get('sequence')?.hasError('min')){
+              <mat-error>Debe ser al menos 1</mat-error>
+            }
           </mat-form-field>
         </div>
 
@@ -47,11 +54,13 @@
           <button mat-button type="button" (click)="onCancel()" [disabled]="isSaving">
             Cancelar
           </button>
-          <button mat-raised-button color="primary" type="button" (click)="onSubmit()" [disabled]="!flowForm.valid || isSaving">
+          <button mat-raised-button color="primary" type="button" (click)="onSubmit()"
+            [disabled]="!flowForm.valid || isSaving">
             {{ isSaving ? 'Guardando...' : 'Crear Flujo' }}
           </button>
         </div>
       </form>
+      }
     </mat-card-content>
   </mat-card>
 </div>

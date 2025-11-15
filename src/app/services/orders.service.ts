@@ -17,13 +17,8 @@ export class OrdersService {
 
   constructor(private http: HttpClient) { }
 
-  getAll(page: number = 1, limit: number = 10): Observable<ResponseDto<{
-    orders: Order[];
-    total: number;
-    page: number;
-    totalPages: number;
-  }>> {
-    return this.http.get<ResponseDto<any>>(`${this.API_URL}?page=${page}&limit=${limit}`);
+  getAll(): Observable<ResponseDto<Order[]>> {
+    return this.http.get<ResponseDto<any>>(`${this.API_URL}/all`);
   }
 
   getById(id: number): Observable<ResponseDto<Order>> {

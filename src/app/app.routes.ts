@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { Login } from './pages/login/login';
-import { Employee } from './pages/employee/employee';
 import { authGuard } from './guards/auth-guard';
 import { roleGuard } from './guards/role-guard';
 import { AdminLayout } from './layouts/admin-layout/admin-layout';
@@ -23,16 +22,11 @@ import { EditArea } from './pages/admin/areas/edit-area/edit-area';
 import { CategoriesList } from './pages/admin/categories/categories-list/categories-list';
 import { CreateCategory } from './pages/admin/categories/create-category/create-category';
 import { EditCategory } from './pages/admin/categories/edit-category/edit-category';
-import { MaterialsList } from './pages/admin/materials/materials-list/materials-list';
-import { CreateMaterial } from './pages/admin/materials/create-material/create-material';
-import { EditMaterial } from './pages/admin/materials/edit-material/edit-material';
 import { FlowsList } from './pages/admin/flows/flows-list/flows-list';
 import { CreateFlow } from './pages/admin/flows/create-flow/create-flow';
 import { EditFlow } from './pages/admin/flows/edit-flow/edit-flow';
-import { OrderTrackingComponent } from './pages/admin/oracle-procedures/order-tracking/order-tracking';
-import { ProductLocationComponent } from './pages/admin/oracle-procedures/product-location/product-location';
 import { EmployeeLayout } from './layouts/employee-layout/employee-layout';
-import { EmployeeProfileComponent } from './pages/employee/profile/employee-profile';
+import { EmployeeProfile} from './pages/employee/profile/employee-profile';
 import { EmployeeTasks } from './pages/employee/tasks/employee-tasks/employee-tasks';
 import { CompletedTasks } from './pages/employee/completed-tasks/completed-tasks';
 
@@ -68,14 +62,9 @@ export const routes: Routes = [
             { path: 'categories', component: CategoriesList },
             { path: 'categories/create', component: CreateCategory },
             { path: 'categories/edit/:id', component: EditCategory },
-            { path: 'materials', component: MaterialsList },
-            { path: 'materials/create', component: CreateMaterial },
-            { path: 'materials/edit/:id', component: EditMaterial },
             { path: 'flows', component: FlowsList },
             { path: 'flows/create', component: CreateFlow },
             { path: 'flows/edit/:id', component: EditFlow },
-            { path: 'order-tracking', component: OrderTrackingComponent },
-            { path: 'product-location', component: ProductLocationComponent },
         ]
     },
     {
@@ -84,7 +73,7 @@ export const routes: Routes = [
         canActivate: [authGuard, roleGuard],
         data: { role: 'employee' },
         children: [
-            { path: 'profile', component: EmployeeProfileComponent },
+            { path: 'profile', component: EmployeeProfile },
             {path: 'tasks',component: EmployeeTasks},
             {path: 'completed-tasks',component: CompletedTasks}
         ]

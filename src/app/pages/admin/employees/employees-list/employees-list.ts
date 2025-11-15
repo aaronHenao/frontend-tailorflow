@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
@@ -14,7 +13,6 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
   selector: 'app-employees-list',
   standalone: true,
   imports: [
-    CommonModule,
     RouterModule,
     MatTableModule,
     MatButtonModule,
@@ -27,11 +25,7 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 })
 export class EmployeesList implements OnInit {
   employees: Employee[] = [];
-  total = 0;
-  page = 1;
-  pageSize = 10;
-  pageSizeOptions = [5, 10, 25, 50];
-  displayedColumns: string[] = ['id_employee', 'cc', 'name', 'role', 'state', 'actions']; 
+  displayedColumns: string[] = ['cc', 'name', 'role', 'state', 'actions']; 
   isLoading = false;
 
   constructor(private employeesService: EmployeesService, private router: Router) { }
@@ -43,10 +37,9 @@ export class EmployeesList implements OnInit {
   
   loadEmployees(): void {
     this.isLoading = true;
-    this.employeesService.getAll(this.page, this.pageSize).subscribe({
+    this.employeesService.getAll().subscribe({
       next: (response) => {
-        this.employees = response.data.employees; 
-        this.total = response.data.total;
+        this.employees = response.data; 
         this.isLoading = false;
       },
       error: (err) => {
@@ -57,11 +50,8 @@ export class EmployeesList implements OnInit {
     });
   }
 
-  
-  onPageChange(event: PageEvent): void {
-    this.page = event.pageIndex + 1; 
-    this.pageSize = event.pageSize;
-    this.loadEmployees();
+  createEmployee(): void {
+    this.router.navigate(['/admin/employees/create']);
   }
 
   

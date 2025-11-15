@@ -1,5 +1,4 @@
 import { Component, Inject, OnInit } from '@angular/core'; 
-import { CommonModule } from '@angular/common';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -13,7 +12,6 @@ import { ProductDetail } from '../../../../core/models/order.model';
   selector: 'app-order-details-dialog',
   standalone: true,
   imports: [
-    CommonModule,
     MatDialogModule,
     MatButtonModule,
     MatIconModule,

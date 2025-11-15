@@ -4,57 +4,57 @@
       <mat-card-title>
         <mat-icon>person</mat-icon> Editar Cliente
       </mat-card-title>
-      <mat-card-subtitle *ngIf="customer">
-        Cliente: {{ customer.name }}
-      </mat-card-subtitle>
+      @if(customer){
+      <mat-card-subtitle> Cliente: {{ customer.name }}</mat-card-subtitle>
+      }
     </mat-card-header>
 
-    <mat-divider></mat-divider>
+    <mat-card-content>
+      @if(isLoading){
+      <div class="loading">Cargando cliente...</div>
+      } @else {
+      <form [formGroup]="editForm">
+        <div class="form-section">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Nombre</mat-label>
+            <input matInput formControlName="name" placeholder="Ingrese el nuevo nombre">
+            <mat-icon matSuffix>person_outline</mat-icon>
+            @if(editForm.get('name')?.hasError('maxlength')){
+              <mat-error>Máximo 100 caracteres</mat-error>
+            }
+          </mat-form-field>
 
-    <mat-card-content class="form-content">
-      <div *ngIf="isLoading" class="loading-spinner">
-        Cargando datos del cliente...
-      </div>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Dirección</mat-label>
+            <input matInput formControlName="address" placeholder="Ingrese la nueva dirección">
+            <mat-icon matSuffix>location_on</mat-icon>
+            @if(editForm.get('address')?.hasError('maxlength')){
+              <mat-error>Máximo 100 caracteres</mat-error>
+            }
+          </mat-form-field>
 
-      <form [formGroup]="editForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading">
-        
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Nombre</mat-label>
-          <input matInput formControlName="name" placeholder="Ingrese el nuevo nombre">
-          <mat-icon matSuffix>person_outline</mat-icon>
-          <mat-error *ngIf="editForm.get('name')?.hasError('maxlength')">
-            Máximo 100 caracteres
-          </mat-error>
-        </mat-form-field>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Teléfono</mat-label>
+            <input matInput formControlName="phone" placeholder="Ingrese el nuevo teléfono">
+            <mat-icon matSuffix>phone</mat-icon>
+            @if(editForm.get('phone')?.hasError('maxlength')){
+              <mat-error>Máximo 15 caracteres</mat-error>
+            }
+          </mat-form-field>
+        </div>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Dirección</mat-label>
-          <input matInput formControlName="address" placeholder="Ingrese la nueva dirección">
-          <mat-icon matSuffix>location_on</mat-icon>
-          <mat-error *ngIf="editForm.get('address')?.hasError('maxlength')">
-            Máximo 100 caracteres
-          </mat-error>
-        </mat-form-field>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Teléfono</mat-label>
-          <input matInput formControlName="phone" placeholder="Ingrese el nuevo teléfono">
-          <mat-icon matSuffix>phone</mat-icon>
-          <mat-error *ngIf="editForm.get('phone')?.hasError('maxlength')">
-            Máximo 15 caracteres
-          </mat-error>
-        </mat-form-field>
-
-        <mat-card-actions class="actions">
-          <button mat-raised-button color="primary" type="submit" [disabled]="isSaving || isLoading">
-            <mat-icon>{{ isSaving ? 'loop' : 'save' }}</mat-icon> 
-            {{ isSaving ? 'Guardando...' : 'Guardar Cambios' }}
-          </button>
+        <div class="actions">
           <button mat-button type="button" (click)="onCancel()" [disabled]="isSaving">
             Cancelar
           </button>
-        </mat-card-actions>
+          <button mat-raised-button color="primary" type="button" (click)="onSubmit()"
+            [disabled]="!editForm.valid || isSaving">
+            {{ isSaving ? 'Guardando...' : 'Guardar Cambios' }}
+          </button>
+        </div>
       </form>
+      }
     </mat-card-content>
   </mat-card>
 </div>

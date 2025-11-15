@@ -1,5 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit} from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -7,8 +6,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { MatDividerModule } from '@angular/material/divider'; 
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AreasService } from '../../../../services/areas.service';
 import { Area } from '../../../../core/models/area.model';
 
@@ -16,15 +13,12 @@ import { Area } from '../../../../core/models/area.model';
   selector: 'app-edit-area',
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
     MatCardModule,
     MatIconModule,
-    MatDividerModule,
-    MatProgressSpinnerModule
   ],
   templateUrl: './edit-area.html',
   styleUrl: './edit-area.scss'
@@ -41,7 +35,6 @@ export class EditArea implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private areasService: AreasService,
-    private cdr: ChangeDetectorRef 
   ) {
     this.initForm();
   }
@@ -68,7 +61,6 @@ export class EditArea implements OnInit {
         });
 
         this.isLoading = false;
-        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error cargando área', err);

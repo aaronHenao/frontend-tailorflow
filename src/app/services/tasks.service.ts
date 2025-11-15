@@ -1,4 +1,3 @@
-// tasks.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -29,4 +28,14 @@ export class TasksService {
   completeTask(id: number): Observable<ResponseDto<Task>> {
     return this.http.patch<ResponseDto<Task>>(`${this.API_URL}/${id}/complete`, {});
   }
+
+  getProductTasks(id: number):Observable<ResponseDto<Task[]>>{
+    return this.http.get<ResponseDto<Task[]>>(`${this.API_URL}/${id}/product-tasks`);
+  }
+
+  getAllTasks(): Observable<Task[]> {
+  return this.http.get<Task[]>(`${this.API_URL}`);
+}
+
+  
 }

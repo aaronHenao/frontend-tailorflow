@@ -1,5 +1,4 @@
-import { Component, EventEmitter, Output, OnInit } from '@angular/core'; 
-import { CommonModule } from '@angular/common'; 
+import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -13,7 +12,6 @@ import { EmployeesService } from '../../services/employee.service';
   selector: 'app-navbar',
   standalone: true,
   imports: [
-    CommonModule, 
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
@@ -25,7 +23,6 @@ import { EmployeesService } from '../../services/employee.service';
 export class Navbar implements OnInit { 
   @Output() sidebarToggle = new EventEmitter<void>();
   userName: string = 'Cargando...'; 
-  notificationCount: number = 3; 
 
   constructor(
     private authService: AuthService,
@@ -62,8 +59,4 @@ export class Navbar implements OnInit {
     this.authService.logout();
   }
 
-  onNotifications(): void {
-
-    console.log('Ver notificaciones');
-  }
 }

@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
@@ -12,7 +11,6 @@ import { Flow } from '../../../../core/models/flow.model';
   selector: 'app-flows-list',
   standalone: true,
   imports: [
-    CommonModule,
     RouterModule,
     MatTableModule,
     MatButtonModule,
@@ -24,7 +22,7 @@ import { Flow } from '../../../../core/models/flow.model';
 })
 export class FlowsList implements OnInit {
   flows: Flow[] = [];
-  displayedColumns: string[] = ['id_flow', 'category', 'sequence', 'role', 'area', 'actions'];
+  displayedColumns: string[] = ['category', 'sequence', 'role', 'area', 'actions'];
   isLoading = false;
 
   constructor(
@@ -48,6 +46,10 @@ export class FlowsList implements OnInit {
         this.isLoading = false;
       }
     });
+  }
+
+  createFlow(): void{
+    this.router.navigate(['/admin/flows/create']);
   }
 
   editFlow(flow: Flow): void {

@@ -1,60 +1,67 @@
 <div class="edit-category-container">
   <mat-card>
     <mat-card-header>
-      <mat-card-title>
-        <mat-icon>edit</mat-icon> Editar Categoría
-      </mat-card-title>
-      <mat-card-subtitle *ngIf="category">Categoría: {{ category.name }}</mat-card-subtitle>
+      <mat-card-title>Editar Categoría</mat-card-title>
     </mat-card-header>
 
-    <mat-divider></mat-divider>
-
-    <mat-card-content class="form-content">
-      
-      <div *ngIf="isLoading" class="loading-spinner">
-        <mat-spinner diameter="30"></mat-spinner>
-        <p>Cargando datos de la categoría...</p>
+    <mat-card-content>
+      @if (isLoading) {
+      <div class="loading">
+        Cargando datos de la categoría...
       </div>
-      
-      <form [formGroup]="editForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading">
+      } @else {
+      <form [formGroup]="editForm">
+        @if (category) {
+        <div class="readonly-info">
+          <div class="info-row">
+            <span class="label">Nombre actual:</span>
+            <span class="value">{{ category.name }}</span>
+          </div>
+        </div>
+        }
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Nombre</mat-label>
-          <input matInput formControlName="name" placeholder="Ingrese el nuevo nombre">
-          <mat-icon matSuffix>label</mat-icon>
-          
-          <mat-error *ngIf="editForm.get('name')?.hasError('required')">
-            El nombre es **obligatorio**.
-          </mat-error>
-          <mat-error *ngIf="editForm.get('name')?.hasError('maxlength')">
-            Máximo **50 caracteres**.
-          </mat-error>
-        </mat-form-field>
-        
-        <mat-form-field appearance="outline" class="full-width">
+        <div class="form-section">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Nuevo nombre</mat-label>
+            <input matInput formControlName="name" placeholder="Ingrese el nuevo nombre" />
+            <mat-icon matSuffix>label</mat-icon>
+
+            @if (editForm.get('name')?.hasError('required')) {
+            <mat-error>El nombre es obligatorio.</mat-error>
+            }
+            @if (editForm.get('name')?.hasError('maxlength')) {
+            <mat-error>Máximo 50 caracteres.</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
             <mat-label>Descripción</mat-label>
-            <textarea matInput formControlName="description" placeholder="Breve resumen del tipo de productos..."></textarea>
+            <textarea matInput formControlName="description"
+              placeholder="Breve resumen del tipo de productos..."></textarea>
             <mat-icon matSuffix>subject</mat-icon>
-            
-            <mat-error *ngIf="editForm.get('description')?.hasError('required')">
-                La descripción es **obligatoria**.
-            </mat-error>
-            <mat-error *ngIf="editForm.get('description')?.hasError('maxlength')">
-                Máximo **100 caracteres**.
-            </mat-error>
-        </mat-form-field>
 
+            @if (editForm.get('description')?.hasError('required')) {
+            <mat-error>La descripción es obligatoria.</mat-error>
+            }
+            @if (editForm.get('description')?.hasError('maxlength')) {
+            <mat-error>Máximo 100 caracteres.</mat-error>
+            }
+          </mat-form-field>
+        </div>
 
-        <mat-card-actions class="actions">
-          <button mat-raised-button color="primary" type="submit" [disabled]="editForm.invalid || isSaving">
-            <mat-icon>{{ isSaving ? 'loop' : 'save' }}</mat-icon> 
-            {{ isSaving ? 'Guardando...' : 'Guardar Cambios' }}
-          </button>
+        <div class="actions">
           <button mat-button type="button" (click)="onCancel()" [disabled]="isSaving">
             Cancelar
           </button>
-        </mat-card-actions>
+
+          <button mat-raised-button color="primary" type="button" (click)="onSubmit()"
+            [disabled]="!editForm.valid || isSaving">
+            <mat-icon>{{ isSaving ? 'loop' : 'save' }}</mat-icon>
+            {{ isSaving ? 'Guardando...' : 'Guardar Cambios' }}
+          </button>
+        </div>
       </form>
+      }
     </mat-card-content>
   </mat-card>
 </div>
