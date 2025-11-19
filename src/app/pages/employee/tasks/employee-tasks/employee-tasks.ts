@@ -37,14 +37,13 @@ interface GroupedTasks {
   styleUrl: './employee-tasks.scss'
 })
 export class EmployeeTasks implements OnInit {
-  currentEmployeeTasks: Task[] = []; // Tareas del empleado actual (La que muestro)
-  productTasks: Map<number, Task[]> = new Map(); // Todas las tareas por producto (para validación)
-  groupedTasks: GroupedTasks[] = []; // Tareas del empleado actual
+  currentEmployeeTasks: Task[] = []; 
+  productTasks: Map<number, Task[]> = new Map(); 
+  groupedTasks: GroupedTasks[] = []; 
   isLoading = true;
   errorMessage = '';
   processingTaskId: number | null = null;
   loadingProductId: number | null = null;
-  // Productos cuya lista completa de tareas se está cargando
   productTasksLoading: Set<number> = new Set();
 
   currentEmployeeId: number | null = null;
@@ -64,7 +63,6 @@ export class EmployeeTasks implements OnInit {
   loadTasks(): void {
     this.isLoading = true;
     this.errorMessage = '';
-    // Cargar el id del empleado actual
     if (this.currentEmployeeId == null) {
       this.loadEmployeeAndTasks();
       return;
@@ -72,7 +70,6 @@ export class EmployeeTasks implements OnInit {
 
     this.tasksService.getAssignedTasks().subscribe({
       next: (response) => {
-        // Tareas asignadas al empleado actual y que estén pendientes o en progreso
         this.currentEmployeeTasks = response.data.filter(task => 
           task.id_employee === this.currentEmployeeId && 
           (task.id_state === 1 || task.id_state === 2)
@@ -81,7 +78,6 @@ export class EmployeeTasks implements OnInit {
         
         this.groupTasksByProduct();
 
-        //Para respetar la seuencia por producto
         for (const group of this.groupedTasks) {
           this.findTaskOfProduct(group.productId);
         }
@@ -120,7 +116,6 @@ export class EmployeeTasks implements OnInit {
   groupTasksByProduct(): void {
     const grouped = new Map<number, GroupedTasks>();
 
-    // SOLO las tareas del empleado actual
     this.currentEmployeeTasks.forEach((task: Task) => {
       if (!grouped.has(task.id_product)) {
         grouped.set(task.id_product, {
@@ -201,15 +196,13 @@ export class EmployeeTasks implements OnInit {
   }
 
   findTaskOfProduct(id:number){
-    // Evitar llamadas duplicadas
     if (this.productTasksLoading.has(id)) return;
     this.productTasksLoading.add(id);
 
-    // Llamar al servicio para traer todas las tareas del producto
     this.tasksService.getProductTasks(id).subscribe({
       next: (response) => {
         const productTasks = response.data || [];
-        // Ordenar por sequence y guardar para validación
+
         productTasks.sort((a, b) => a.sequence - b.sequence);
         this.productTasks.set(id, productTasks);
         
@@ -227,25 +220,25 @@ export class EmployeeTasks implements OnInit {
       return false;
     }
 
-    // Sólo bloquear si el empleado que quiere iniciar tiene una tarea en proceso
+    
     const hasTaskInProgress = this.currentEmployeeTasks.some(t => t.id_state === 2);
     if (hasTaskInProgress) {
       return false;
     }
 
-    // Si todavía se está cargando la lista completa de tareas del producto, bloquear hasta tener la información
+    
     if (this.productTasksLoading.has(task.id_product)) {
       return false;
     }
 
-    // FIFO por empleado: sólo permitir iniciar la primera tarea pendiente/no completada del empleado
+    
     const employeePending = this.currentEmployeeTasks;
     const firstPending = employeePending.length ? employeePending[0] : null;
     if (firstPending && firstPending.id_task !== task.id_task) {
       return false;
     }
 
-    // Verificar la secuencia dentro del producto: la tarea anterior del mismo producto debe estar COMPLETADA
+    
     const productTasks = this.productTasks.get(task.id_product) || [];
     if (task.sequence === 1) {
       return true;

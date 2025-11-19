@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { ResponseDto } from '../core/models/response.dto';
 import { Category } from '../core/models/category.model'; 
+import { CreateCategoryDto } from '../core/models/createCategory.model';
 
 
 @Injectable({
@@ -22,7 +23,7 @@ export class CategoriesService {
     return this.http.get<ResponseDto<Category>>(`${this.API_URL}/${id}`);
   }
 
-  create(category: Category): Observable<ResponseDto<Category>> {
+  create(category: CreateCategoryDto): Observable<ResponseDto<Category>> {
     return this.http.post<ResponseDto<Category>>(this.API_URL, category);
   }
 
